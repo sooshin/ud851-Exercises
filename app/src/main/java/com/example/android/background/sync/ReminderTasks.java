@@ -29,9 +29,8 @@ public class ReminderTasks {
     public static void executeTask(Context context, String action) {
         if (ACTION_INCREMENT_WATER_COUNT.equals(action)) {
             incrementWaterCount(context);
-        }
-        //      TODO (3) If the user ignored the reminder, clear the notification
-        else if (ACTION_DISMISS_NOTIFICATION.equals(action)) {
+        } else if (ACTION_DISMISS_NOTIFICATION.equals(action)) {
+            //      TODO (3) If the user ignored the reminder, clear the notification
             NotificationUtils.clearAllNotifications(context);
         }
     }
@@ -40,9 +39,7 @@ public class ReminderTasks {
         int previousCount = PreferenceUtilities.getWaterCount(context);
         PreferenceUtilities.incrementWaterCount(context);
         //      TODO (4) If the water count was incremented, clear any notifications
-        int count = PreferenceUtilities.getWaterCount(context);
-        if (previousCount + 1 == count) {
-            NotificationUtils.clearAllNotifications(context);
-        }
+        NotificationUtils.clearAllNotifications(context);
+
     }
 }
