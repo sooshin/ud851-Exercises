@@ -22,7 +22,7 @@ public class NotificationUtils {
 
     private static final int REQUEST_CODE_ID = 1;
 
-    private static final String WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "notification-channel-id";
+    private static final String WATER_REMINDER_NOTIFICATION_CHANNEL_ID = "reminder_notification_channel";
 
     private static final int NOTIFICATION_ID = 20;
 
@@ -31,7 +31,7 @@ public class NotificationUtils {
     // to take a look at this guide to see an example of what the code in this method will look like:
     // https://developer.android.com/training/notify-user/build-notification.html
 
-    public void remindUserBecauseCharging(Context context) {
+    public static void remindUserBecauseCharging(Context context) {
 
         // TODO (8) Get the NotificationManager using context.getSystemService
         NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -58,16 +58,15 @@ public class NotificationUtils {
         // - uses the content intent returned by the contentIntent helper method for the contentIntent
         // - automatically cancels the notification when the notification is clicked
 
-        String text = context.getString(R.string.charging_reminder_notification_body);
-
         NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, WATER_REMINDER_NOTIFICATION_CHANNEL_ID)
                         .setColor(ContextCompat.getColor(context, R.color.colorPrimary))
                         .setSmallIcon(R.drawable.ic_drink_notification)
                         .setLargeIcon(largeIcon(context))
                         .setContentTitle(context.getString(R.string.charging_reminder_notification_title))
-                        .setContentText(text)
-                        .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+                        .setContentText(context.getString(R.string.charging_reminder_notification_body))
+                        .setStyle(new NotificationCompat.BigTextStyle().bigText(
+                                context.getString(R.string.charging_reminder_notification_body)))
                         .setDefaults(NotificationCompat.DEFAULT_VIBRATE)
                         .setContentIntent(contentIntent(context))
                         .setAutoCancel(true);
@@ -90,9 +89,9 @@ public class NotificationUtils {
     // TODO (1) Create a helper method called contentIntent with a single parameter for a Context. It
     // should return a PendingIntent. This method will create the pending intent which will trigger when
     // the notification is pressed. This pending intent should open up the MainActivity.
-    private PendingIntent contentIntent(Context context) {
+    private static PendingIntent contentIntent(Context context) {
         // TODO (2) Create an intent that opens up the MainActivity
-        Intent intent = new Intent(context, MainActivity.class);
+        Intent startActivityIntent = new Intent(context, MainActivity.class);
         // TODO (3) Create a PendingIntent using getActivity that:
             // - Take the context passed in as a parameter
             // - Takes an unique integer ID for the pending intent (you can create a constant for
@@ -102,13 +101,13 @@ public class NotificationUtils {
             // - Has the flag FLAG_UPDATE_CURRENT, so that if the intent is created again, keep the
             // intent but update the data
         return PendingIntent.getActivity(
-                context, REQUEST_CODE_ID, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                context, REQUEST_CODE_ID, startActivityIntent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
 
     // TODO (4) Create a helper method called largeIcon which takes in a Context as a parameter and
     // returns a Bitmap. This method is necessary to decode a bitmap needed for the notification.
-    private Bitmap largeIcon(Context context) {
+    private static Bitmap largeIcon(Context context) {
         // TODO (5) Get a Resources object from the context.
         Resources resources = context.getResources();
         // TODO (6) Create and return a bitmap using BitmapFactory.decodeResource, passing in the
