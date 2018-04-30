@@ -37,9 +37,7 @@ public class WaterReminderIntentService extends IntentService {
         String action = intent.getAction();
 
 //      TODO (13) Call ReminderTasks.executeTaskForTag and pass in the action to be performed
-        if (action != null) {
-            ReminderTasks.executeTask(this, action);
-        }
+        ReminderTasks.executeTask(this, action);
 
     }
 }
