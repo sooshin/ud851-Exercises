@@ -17,13 +17,17 @@ package com.example.android.background.sync;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.firebase.jobdispatcher.Constraint;
+import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
 import com.firebase.jobdispatcher.Trigger;
+
+import java.util.concurrent.TimeUnit;
 
 public class ReminderUtilities {
     // TODO (15) Create three constants and one variable:
@@ -32,22 +36,24 @@ public class ReminderUtilities {
     //  - REMINDER_JOB_TAG should be a String constant, storing something like "hydration_reminder_tag"
     //  - sInitialized should be a private static boolean variable which will store whether the job
     //    has been activated or not
-    private static final int REMINDER_INTERVAL_SECONDS = 60 * 15;
+    private static final int REMINDER_INTERVAL_MINUTES = 15;
+    private static final int REMINDER_INTERVAL_SECONDS = (int) TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES);
     private static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
+
     private static final String REMINDER_JOB_TAG = "hydration_reminder_tag";
+
     private static boolean sInitialized;
 
     // TODO (16) Create a synchronized, public static method called scheduleChargingReminder that takes
     // in a context. This method will use FirebaseJobDispatcher to schedule a job that repeats roughly
     // every REMINDER_INTERVAL_SECONDS when the phone is charging. It will trigger WaterReminderFirebaseJobService
     // Checkout https://github.com/firebase/firebase-jobdispatcher-android for an example
-    synchronized public static void scheduleChargingReminder(Context context) {
+    synchronized public static void scheduleChargingReminder(@NonNull final Context context) {
         // TODO (17) If the job has already been initialized, return
-        if (sInitialized) {
-            return;
-        }
+        if (sInitialized) return;
+
         // TODO (18) Create a new GooglePlayDriver
-        GooglePlayDriver driver = new GooglePlayDriver(context);
+        Driver driver = new GooglePlayDriver(context);
         // TODO (19) Create a new FirebaseJobDispatcher with the driver
         FirebaseJobDispatcher dispatcher = new FirebaseJobDispatcher(driver);
 
@@ -61,7 +67,7 @@ public class ReminderUtilities {
             //   setTrigger, passing in a Trigger.executionWindow
             // - replaces the current job if it's already running
         // Finally, you should build the job.
-        Job myJob = dispatcher.newJobBuilder()
+        Job constraintReminderJob = dispatcher.newJobBuilder()
                 .setService(WaterReminderFirebaseJobService.class)
                 .setTag(REMINDER_JOB_TAG)
                 .setConstraints(
@@ -74,7 +80,7 @@ public class ReminderUtilities {
                 .build();
 
         // TODO (21) Use dispatcher's schedule method to schedule the job
-        dispatcher.schedule(myJob);
+        dispatcher.schedule(constraintReminderJob);
         // TODO (22) Set sInitialized to true to mark that we're done setting up the job
         sInitialized = true;
     }

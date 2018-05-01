@@ -28,7 +28,7 @@ public class WaterReminderFirebaseJobService  extends JobService {
 
     // TODO (4) Override onStartJob
     @Override
-    public boolean onStartJob(final JobParameters job) {
+    public boolean onStartJob(final JobParameters jobParameters) {
         // TODO (5) By default, jobs are executed on the main thread, so make an anonymous class extending
         //  AsyncTask called mBackgroundTask.
         mBackgroundTask = new AsyncTask() {
@@ -41,8 +41,7 @@ public class WaterReminderFirebaseJobService  extends JobService {
                 // this service as the context (WaterReminderFirebaseJobService.this) and return null
                 // when finished.
                 Context context = WaterReminderFirebaseJobService.this;
-                String action = ReminderTasks.ACTION_CHARGING_REMINDER;
-                ReminderTasks.executeTask(context, action);
+                ReminderTasks.executeTask(context, ReminderTasks.ACTION_CHARGING_REMINDER);
                 return null;
             }
 
@@ -51,7 +50,7 @@ public class WaterReminderFirebaseJobService  extends JobService {
             // and that you do not want to reschedule the job.
             @Override
             protected void onPostExecute(Object o) {
-                jobFinished(job, false);
+                jobFinished(jobParameters, false);
             }
         };
 
@@ -67,9 +66,7 @@ public class WaterReminderFirebaseJobService  extends JobService {
     @Override
     public boolean onStopJob(JobParameters job) {
         // TODO (12) If mBackgroundTask is valid, cancel it
-        if (mBackgroundTask != null) {
-            mBackgroundTask.cancel(true);
-        }
+        if (mBackgroundTask != null) mBackgroundTask.cancel(true);
         // TODO (13) Return true to signify the job should be retried
         return true;
     }
