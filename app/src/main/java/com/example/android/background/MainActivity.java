@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity implements
 
     private Toast mToast;
 
-    private ChargingBroadcastReceiver mReceiver;
-    private IntentFilter mIntentFilter;
+    ChargingBroadcastReceiver mReceiver;
+    IntentFilter mIntentFilter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements
     // either change the image of mChargingImageView to ic_power_pink_80px if the boolean is true
     // or R.drawable.ic_power_grey_80px it it's not. This method will eventually update the UI
     // when our broadcast receiver is triggered when the charging state changes.
-    public void showCharging(boolean isCharging) {
+    private void showCharging(boolean isCharging) {
         if (isCharging) {
             mChargingImageView.setImageResource(R.drawable.ic_power_pink_80px);
         } else {
@@ -161,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements
 
 
     // TODO (2) Create an inner class called ChargingBroadcastReceiver that extends BroadcastReceiver
-    class ChargingBroadcastReceiver extends BroadcastReceiver {
+    private class ChargingBroadcastReceiver extends BroadcastReceiver {
 
         // TODO (3) Override onReceive to get the action from the intent and see if it matches the
         // Intent.ACTION_POWER_CONNECTED. If it matches, it's charging. If it doesn't match, it's not
@@ -169,13 +169,8 @@ public class MainActivity extends AppCompatActivity implements
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            boolean isCharging;
             String action = intent.getAction();
-            if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
-                isCharging = true;
-            } else {
-                isCharging = false;
-            }
+            boolean isCharging = (action.equals(Intent.ACTION_POWER_CONNECTED));
 
         // TODO (4) Update the UI using the showCharging method you wrote
             showCharging(isCharging);
