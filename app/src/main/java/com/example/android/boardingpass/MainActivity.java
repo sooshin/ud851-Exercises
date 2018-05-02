@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         // TODO (8) Use TimeUnit methods to format the total minutes until boarding
         long totalMinutes = info.getMinutesUntilBoarding();
         long hours = TimeUnit.MINUTES.toHours(totalMinutes);
-        long minutes = totalMinutes - hours * 60;
+        long minutes = totalMinutes - TimeUnit.HOURS.toMillis(hours);
 
         String boardingIn = getString(R.string.countDownFormat, hours, minutes);
         mBinding.textViewBoardingInCountdown.setText(boardingIn);
